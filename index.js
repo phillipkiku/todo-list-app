@@ -3,15 +3,24 @@ let input = document.querySelector('input')
 let button = document.querySelector('button')
 let tasksContainer = document.querySelector('ul')
 
-function createTask(){
-    // get input value
-    let task = input.value
-    // create list element with input value
+
+// get tasks from local storage and add them to the taskscontainer
+let tasks = JSON.parse(localStorage.getItem('tasks'))
+
+let taskElements = tasks.map(function(element){
+    let task = JSON.parse(element)
+    return createTaskElement(task.name)
+})
+
+tasksContainer.append(...taskElements)
+
+
+function createTaskElement(inputValue){
     let newListItem = document.createElement('li')
 
     // add span for task element
     let taskSpan = document.createElement('span')
-    taskSpan.innerText = task;
+    taskSpan.innerText = inputValue;
 
     // create the span element
     let spanElement = document.createElement('span')
@@ -58,19 +67,59 @@ function createTask(){
         editIcon.style.display = "inline"
     })
 
-    // editIcon.addEventListener('click', function(){
-    //     let currentTask = newListItem.childNodes[0].data
-    //     console.dir(newListItem)
-    //     let editedTask = prompt("Edit Task", currentTask)
-    //     newListItem.childNodes[0].data = editedTask
-    // })
-
     // add the icons to the span
     spanElement.append(completeIcon, editIcon,doneIcon, deleteIcon)
 
     // add span to the new list item
     newListItem.append(taskSpan, spanElement)
 
+    return newListItem;
+}
+
+
+
+function addTask(){
+    // get input value
+    let task = input.value
+
+    // add task to local storage
+    addTaskToLocalStorage(task)
+
+    // create list element with input value
+    let newListItem = createTaskElement(task)
+
     // add element to the tasks container
     tasksContainer.appendChild(newListItem)
+}
+
+
+
+function addTaskToLocalStorage(task){
+    // save task to Local storage
+    let taskObject = {
+        name: task,
+        isComplete: false
+    }
+    let stringifiedObject = JSON.stringify(taskObject);
+
+
+    let savedTasks = localStorage.getItem('tasks')
+
+    if(savedTasks === null){
+        let tasks = []
+        tasks.push(stringifiedObject)
+
+        let stringifiedTasks = JSON.stringify(tasks)
+
+        localStorage.setItem('tasks', stringifiedTasks)
+
+    }else{
+        let oldTasks = JSON.parse(savedTasks)
+
+        oldTasks.push(stringifiedObject)
+
+        let newTasks = JSON.stringify(oldTasks)
+
+        localStorage.setItem('tasks', newTasks)
+    }   
 }
