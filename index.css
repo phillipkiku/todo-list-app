@@ -1,8 +1,8 @@
 #head{
-    background-color: brown;
+    background-color: rgb(61, 165, 42);
     height: 100px;
-    color: black;
+    color: pink;
     font-family: 'Courier New', Courier, monospace;
-    font-size: 80px;
+    font-size: 120px;
     border: 1px solid color(srgb red green blue);
 }
